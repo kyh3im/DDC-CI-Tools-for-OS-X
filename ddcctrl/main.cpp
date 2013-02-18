@@ -65,10 +65,33 @@ int main(int argc, char* argv[]) {
 					return 1;
 				}
 				
-			    int result;
+                int result;
 				struct DDCWriteCommand write_command;
-				write_command.control_id = atoi(control.c_str());
-				write_command.new_value = new_value_int;
+                // hex to dec
+                char *string;
+                string = strstr(control.c_str(),"0x");
+                int dec = 0;
+                if (string){
+                    int len = (int)strlen(string);
+                    len = len - 1;
+                    float hex_place = 0.0625;
+                    char pos[2];
+                    while (len>=2){
+                        strncpy(pos,string+(len--),1);
+                        if (isalpha(pos[0])){
+                            pos[0] = tolower(pos[0]);
+                            if (pos[0]<='f') 
+                                dec = pos[0]-'a'+10;
+                            else hex_place /= 16.0;
+                        }
+                        write_command.control_id += ((dec>0)?dec:atoi(pos))*(hex_place*=16.0);
+                        dec = 0;
+                    }
+                } else {
+                    write_command.control_id = atoi(control.c_str());
+                }
+                // ends
+                write_command.new_value = new_value_int;
 				result = ddc_write(display_int, &write_command);
 				return !result;
 			}
