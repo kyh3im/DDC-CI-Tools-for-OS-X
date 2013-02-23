@@ -14,6 +14,7 @@ ddcctrl
 -------
 
 A basic command line program for using ddc
+Based on jontaylor/DDC-CI-Tools-for-OS-X
 
 ddcgui
 ------
