@@ -13,7 +13,8 @@ This is a C library that contains all the code for using DDC/CI.
 ddcctrl
 -------
 
-A basic command line program for using ddc
+A basic command line program for using ddc.
+
 Based on jontaylor/DDC-CI-Tools-for-OS-X
 
 ddcgui
