@@ -7,6 +7,7 @@
 using namespace GetOpt;
 
 void display_help();
+void commands_help();
 
 int main(int argc, char* argv[]) {
 	
@@ -22,6 +23,7 @@ int main(int argc, char* argv[]) {
 	
 	
 	bool list_displays;
+    bool list_commands;
 	
 	try
 	{	
@@ -31,6 +33,7 @@ int main(int argc, char* argv[]) {
 		
 		ops 
 		>> OptionPresent('h', "help", help_flag)
+        >> OptionPresent('x', "listcommands", list_commands)
 		>> OptionPresent('s', "set", set_flag)
 		>> OptionPresent('g', "get", get_flag)
 		
@@ -44,10 +47,15 @@ int main(int argc, char* argv[]) {
 		
 		if (!ops.options_remain())
 		{
+            if ((list_commands) ) {
+			    commands_help();	
+				return 0;
+			}
 			if ((help_flag) or ((set_flag+get_flag+list_displays) == 0) ) {
 			    display_help();	
 				return 0;
 			}
+           
 			
 			if ((set_flag + get_flag +  list_displays) != 1) {
 				std::cerr << "Please specify only one of the following\n";
@@ -135,9 +143,69 @@ int main(int argc, char* argv[]) {
 
 
 void display_help() {
-	std::cout << "Options are blah\n";
+	std::cout << "Usage: ddcctrl [options]\n"
+    <<"Options:\n"
+    <<"-s                         Set command in case you want to control display.\n"
+    <<"-g                         Get information from display.\n"
+    <<"-d <number>                Required. Specify display number.\n"
+    <<"-c <control>               Specify control command. For example 0xe1 controls display power.\n"
+    <<"-v <value>                 Specify value which will be send.\n"
+    <<"-h                         Display this usage.\n"
+    <<"-x                         Display list of commands.\n"
+    <<"\ne.g \"$ddctrl -d 0 -s -c 0xe1 -v 1\" For primary display set command 0xe1 with value 1.\n";
 }
 
+void commands_help(){
+    std::cout << "Note that these commands may not be completely compatible to your display.\n"
+    <<"Use these on your own risk.\n"
+    <<"\nReset 0x04"
+    <<"\nReset brightness and contrast 0x05"
+    <<"\nReset geometry 0x06"
+    <<"\nReset color 0x08"	
+    <<"\nBrightness 0x10" 
+    <<"\nContrast 0x12" 
+    <<"\nRed gain 0x16"
+    <<"\nGreen gain 0x18"
+    <<"\nBlue gain 0x1a"
+    <<"\nAuto size center 0x1e"	
+    <<"\nWidth 0x22"
+    <<"\nHeight 0x32"
+    <<"\nVertical pos	0x30"
+    <<"\nHorizontal pos 0x20"
+    <<"\nPincushion amp 0x24"
+    <<"\nPincushion phase 0x42"
+    <<"\nKeystone balance 0x40"
+    <<"\nPincushion balance 0x26"
+    <<"\nTop pincushion amp 0x46"
+    <<"\nTop pincushion balance 0x48"
+    <<"\nBottom pincushion amp 0x4a"
+    <<"\nBottom pincushion balance 0x4c"
+    <<"\nVertical linearity 0x3a"
+    <<"\nVertical linearity balance 0x3c"
+    <<"\nHorizontal static convergence 0x28"
+    <<"\nVertical static convergence 0x28"
+    <<"\nMoire cancel 0x56"
+    <<"\nInput source 0x60"
+    <<"\nAudio speaker volume 0x62"
+    <<"\nRed black level 0x6c"
+    <<"\nGreen black level 0x6e"
+    <<"\nBlue black level 0x70\n"
+
+    <<"\nSettings 0xb0"        
+    <<"\nOn screen display 0xca"
+    <<"\nOsd language 0xcc"
+    <<"\nDpms 0xd6"
+    <<"\nMagic bright 0xdc" 
+    <<"\nVcp version 0xdf"
+    <<"\nColor preset 0xe0"
+    <<"\nPower control 0xe1\n"	
+	
+    <<"\nTop left screen purity 0xe8"
+    <<"\nTop right screen purity 0xe9"
+    <<"\nBottom left screen purity 0xe8"
+    <<"\nBottom right screen purity 0xeb\n";
+
+}
 
 /*
 int main (int argc, char * const argv[]) {
